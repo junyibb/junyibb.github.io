@@ -44,7 +44,7 @@
 <meta property="og:image" content="http://example.com/%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87_linux.assets/image-20230505164706431.png">
 <meta property="og:image" content="http://example.com/%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87_linux.assets/image-20230505170751181.png">
 <meta property="article:published_time" content="2022-03-14T04:00:00.000Z">
-<meta property="article:modified_time" content="2025-03-14T04:46:52.541Z">
+<meta property="article:modified_time" content="2025-03-17T02:30:48.089Z">
 <meta property="article:author" content="JUNYI">
 <meta property="article:tag" content="安全技术">
 <meta property="article:tag" content="学习笔记">
@@ -253,7 +253,7 @@
         
         
         
-          16 分钟
+          15 分钟
         
       </span>
     
@@ -297,7 +297,8 @@
                 
                 <h1 id="权限提升-linux"><a href="#权限提升-linux" class="headerlink" title="权限提升_linux"></a>权限提升_linux</h1><h2 id="一、信息收集"><a href="#一、信息收集" class="headerlink" title="一、信息收集"></a>一、信息收集</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs awk">curl ifconfig.me 可见自己IP<br>网卡ifconfig<br>判断权限id<br>查看内核版本 uname -srm<br><br><br>*一个综合类探针：https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/liamg/</span>traitor（上传赋权后直接运行即可）<br><br>一个自动化提权：https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/AlessandroZ/</span>BeRoot （需要py环境）<br><br>*信息收集：https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/rebootuser/</span>LinEnum			（出系统信息）<br>*信息收集：https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/mzet-/</span>linux-exploit-suggester（出EXP信息）<br><br>漏洞探针：https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/sleventyeleven/</span>linuxprivchecker		（需要py环境）<br>*漏洞探针：https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/jondonas/</span>linux-exploit-suggester-<span class="hljs-number">2</span><br><br>二进制文件提权查询：<br>Linux：https:<span class="hljs-regexp">//g</span>tfobins.github.io/<br>Windows：https:<span class="hljs-regexp">//</span>lolbas-project.github.io/<br><br>set payload php<span class="hljs-regexp">/meter--/</span>reverse--<br><br></code></pre></td></tr></table></figure>
 
-<p>F:\MyClass\课件\07_权限提升\04_权限提升_linux\工具\1\项目资源\BeRoot-master</p>
+
+
 <p><img src="/%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87_linux.assets/image-20230506163452733.png" srcset="/img/loading.gif" lazyload alt="image-20230506163452733"></p>
 <h2 id="二、SUID提权"><a href="#二、SUID提权" class="headerlink" title="二、SUID提权"></a>二、SUID提权</h2><h3 id="1-原理"><a href="#1-原理" class="headerlink" title="1.原理"></a>1.原理</h3><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs routeros">是什么？<br>SUID（<span class="hljs-built_in">Set</span><span class="hljs-built_in"> User </span>ID）是一种特殊的权限设置，<br>用于在执行程序时将有效用户ID（普通）（UID）临时更改为程序文件所有者的UID（管理员）。<br><br>root  suid-&gt;<span class="hljs-built_in">find</span><br>			  ↓<br>boy (运维人员)  <span class="hljs-built_in">find</span> （root）	--&gt; nc (root)<br><br><br>漏洞成因：chmod u+s给予了suid u-s删除了suid<br>如：chmod u+s /usr/bin/<span class="hljs-built_in">find</span><br><br><br>使程序在运行中受到了suid root权限的执行过程导致<br><br>提权过程：探针是否有SUID(手工或脚本)-特定SUID利用-<br></code></pre></td></tr></table></figure>
 
