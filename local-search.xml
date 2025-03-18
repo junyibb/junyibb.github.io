@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>一款web钓鱼网页生成器</title>
+    <link href="/2025/03/18/%E4%B8%80%E6%AC%BEweb%E9%92%93%E9%B1%BC%E7%BD%91%E9%A1%B5%E7%94%9F%E6%88%90%E5%99%A8/"/>
+    <url>/2025/03/18/%E4%B8%80%E6%AC%BEweb%E9%92%93%E9%B1%BC%E7%BD%91%E9%A1%B5%E7%94%9F%E6%88%90%E5%99%A8/</url>
+    
+    <content type="html"><![CDATA[<p><strong>项目地址：</strong></p><p><strong><a href="https://github.com/junyibb/web_fishing_go">https://github.com/junyibb/web_fishing_go</a></strong></p><p><strong>一款web克隆网页生成，可用于网络安全web网页钓鱼测试</strong></p><h5 id="已开源，期待各位二开加魔改。"><a href="#已开源，期待各位二开加魔改。" class="headerlink" title="已开源，期待各位二开加魔改。"></a>已开源，期待各位二开加魔改。</h5><hr><h4 id="页面截图"><a href="#页面截图" class="headerlink" title="页面截图"></a>页面截图</h4><p><img src="/image1/1.png" alt="1"></p><h2 id="📌-1-目录结构"><a href="#📌-1-目录结构" class="headerlink" title="📌 1. 目录结构"></a><strong>📌 1. 目录结构</strong></h2><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs nix">web_fishing_go<span class="hljs-symbol">/</span><br>│── main.py           <span class="hljs-comment"># 程序主入口</span><br>│── gui.py            <span class="hljs-comment"># GUI 相关代码</span><br>│── downloader.py     <span class="hljs-comment"># 负责网页下载</span><br>│── parser.py         <span class="hljs-comment"># 解析和处理 HTML/CSS/JS</span><br>│── utils.py          <span class="hljs-comment"># 工具函数</span><br>│── config.py         <span class="hljs-comment"># 配置文件</span><br>│── output<span class="hljs-symbol">/</span>           <span class="hljs-comment"># 存放克隆后的网页</span><br>└── requirements.txt  <span class="hljs-comment"># 依赖包</span><br></code></pre></td></tr></table></figure><hr><h2 id="📌-2-使用教程"><a href="#📌-2-使用教程" class="headerlink" title="📌 2. 使用教程"></a><strong>📌 2. 使用教程</strong></h2><h2 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h2><h3 id="1、-直接下载打包的EXE"><a href="#1、-直接下载打包的EXE" class="headerlink" title="1、 直接下载打包的EXE"></a><strong>1、 直接下载打包的EXE</strong></h3><h2 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h2><p>1、安装依赖。</p><p>2、运行脚本。</p><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs stylus">pip install requirements<span class="hljs-selector-class">.txt</span><br>python <span class="hljs-selector-tag">main</span>.py<br></code></pre></td></tr></table></figure><h2 id="📌-3-工具实测"><a href="#📌-3-工具实测" class="headerlink" title="📌 3. 工具实测"></a><strong>📌 3. 工具实测</strong></h2><h3 id="1、克隆完毕"><a href="#1、克隆完毕" class="headerlink" title="1、克隆完毕"></a>1、克隆完毕</h3><p><img src="/image1/2.png" alt="2"></p><h3 id="2、使用apache或者nginx都可以，但是PHP需5-6，或更低版本"><a href="#2、使用apache或者nginx都可以，但是PHP需5-6，或更低版本" class="headerlink" title="2、使用apache或者nginx都可以，但是PHP需5.6，或更低版本"></a>2、使用apache或者nginx都可以，但是PHP需5.6，或更低版本</h3><p><img src="/image1/4.png" alt="4"></p><h3 id="3、可以看到当点击登录会抓取POST的内容。"><a href="#3、可以看到当点击登录会抓取POST的内容。" class="headerlink" title="3、可以看到当点击登录会抓取POST的内容。"></a>3、可以看到当点击登录会抓取POST的内容。</h3><h3 id="4、并弹出错误，点击重试会跳转到克隆时自定义的网址。"><a href="#4、并弹出错误，点击重试会跳转到克隆时自定义的网址。" class="headerlink" title="4、并弹出错误，点击重试会跳转到克隆时自定义的网址。"></a>4、并弹出错误，点击重试会跳转到克隆时自定义的网址。</h3><p><img src="/image1/7.png" alt="7"></p><h3 id="5、可以看到已经跳转到自定义的网址来了。"><a href="#5、可以看到已经跳转到自定义的网址来了。" class="headerlink" title="5、可以看到已经跳转到自定义的网址来了。"></a>5、可以看到已经跳转到自定义的网址来了。</h3><p><img src="/image1/8.png" alt="8"></p><h3 id="6、回到网站根目录，可以看到成功生成txt，得到账号密码"><a href="#6、回到网站根目录，可以看到成功生成txt，得到账号密码" class="headerlink" title="6、回到网站根目录，可以看到成功生成txt，得到账号密码"></a>6、回到网站根目录，可以看到成功生成txt，得到账号密码</h3><p><img src="/image1/9.png" alt="9"></p><p><img src="/image1/10.png" alt="10"></p><h2 id="本工具仅供学习和测试使用。使用本工具所产生的一切法律责任由使用者自行承担"><a href="#本工具仅供学习和测试使用。使用本工具所产生的一切法律责任由使用者自行承担" class="headerlink" title="本工具仅供学习和测试使用。使用本工具所产生的一切法律责任由使用者自行承担!"></a>本工具仅供学习和测试使用。使用本工具所产生的一切法律责任由使用者自行承担!</h2>]]></content>
+    
+    
+    <categories>
+      
+      <category>网络安全</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>安全技术</tag>
+      
+      <tag>github项目</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>织梦cms任意用户密码修改实战</title>
     <link href="/2024/12/14/%E7%BB%87%E6%A2%A6cms%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E4%BF%AE%E6%94%B9%E5%AE%9E%E6%88%98/"/>
     <url>/2024/12/14/%E7%BB%87%E6%A2%A6cms%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E4%BF%AE%E6%94%B9%E5%AE%9E%E6%88%98/</url>
